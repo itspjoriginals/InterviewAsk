@@ -3,9 +3,10 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await prisma.user.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: {
       id: true, name: true, email: true, image: true, bio: true,
       points: true, role: true, createdAt: true,
@@ -22,9 +23,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   return NextResponse.json({ data: user });
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
-  if (!session?.user?.id || session.user.id !== params.id) {
+  if (!session?.user?.id || session.user.id !== id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -38,7 +40,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
 
   const user = await prisma.user.update({
-    where: { id: params.id },
+    where: { id },
     data: parsed.data,
     select: { id: true, name: true, bio: true, image: true, role: true, points: true },
   });

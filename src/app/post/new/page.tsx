@@ -6,7 +6,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Create Post" };
 
-export default async function NewPostPage({ searchParams }: { searchParams: { type?: string } }) {
+export default async function NewPostPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
+  const { type } = await searchParams;
   const session = await auth();
   if (!session) redirect("/login?callbackUrl=/post/new");
 
@@ -18,7 +19,7 @@ export default async function NewPostPage({ searchParams }: { searchParams: { ty
           <h1 className="font-display text-3xl font-bold text-foreground">Create Post</h1>
           <p className="text-muted-foreground mt-2">Share your knowledge with the community</p>
         </div>
-        <CreatePostForm defaultType={searchParams.type} />
+        <CreatePostForm defaultType={type} />
       </div>
     </div>
   );

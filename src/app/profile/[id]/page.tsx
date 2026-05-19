@@ -4,16 +4,18 @@ import { auth } from "@/auth";
 import { Navbar } from "@/components/layout/Navbar";
 import { ProfileView } from "@/components/profile/ProfileView";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const user = await prisma.user.findUnique({ where: { id: params.id }, select: { name: true } });
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const user = await prisma.user.findUnique({ where: { id }, select: { name: true } });
   return { title: user?.name || "Profile" };
 }
 
-export default async function ProfilePage({ params }: { params: { id: string } }) {
+export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
 
   const user = await prisma.user.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       posts: {
         where: { published: true },

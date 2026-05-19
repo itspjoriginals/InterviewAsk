@@ -6,7 +6,8 @@ import { POINTS_CONFIG } from "@/lib/utils";
 
 const schema = z.object({ content: z.string().min(2).max(2000) });
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
 
   const comment = await prisma.comment.create({
-    data: { content: parsed.data.content, authorId: session.user.id, postId: params.id },
+    data: { content: parsed.data.content, authorId: session.user.id, postId: id },
     include: { author: { select: { id: true, name: true, image: true, role: true } } },
   });
 

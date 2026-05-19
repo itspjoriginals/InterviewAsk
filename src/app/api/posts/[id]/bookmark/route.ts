@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const existing = await prisma.interaction.findUnique({
-    where: { userId_postId_type: { userId: session.user.id, postId: params.id, type: "bookmark" } },
+    where: { userId_postId_type: { userId: session.user.id, postId: id, type: "bookmark" } },
   });
 
   if (existing) {
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ bookmarked: false });
   } else {
     await prisma.interaction.create({
-      data: { userId: session.user.id, postId: params.id, type: "bookmark" },
+      data: { userId: session.user.id, postId: id, type: "bookmark" },
     });
     return NextResponse.json({ bookmarked: true });
   }

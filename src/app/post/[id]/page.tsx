@@ -4,16 +4,18 @@ import { auth } from "@/auth";
 import { Navbar } from "@/components/layout/Navbar";
 import { PostDetail } from "@/components/post/PostDetail";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const post = await prisma.post.findUnique({ where: { id: params.id }, select: { title: true } });
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const post = await prisma.post.findUnique({ where: { id }, select: { title: true } });
   return { title: post?.title || "Post" };
 }
 
-export default async function PostPage({ params }: { params: { id: string } }) {
+export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
 
   const post = await prisma.post.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       author: { select: { id: true, name: true, image: true, role: true, points: true, bio: true } },
       comments: {
@@ -27,13 +29,13 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   if (!post) notFound();
 
   // Increment views
-  await prisma.post.update({ where: { id: params.id }, data: { views: { increment: 1 } } });
+  await prisma.post.update({ where: { id }, data: { views: { increment: 1 } } });
 
   let isLiked = false;
   let isBookmarked = false;
   if (session?.user?.id) {
     const interactions = await prisma.interaction.findMany({
-      where: { userId: session.user.id, postId: params.id },
+      where: { userId: session.user.id, postId: id },
     });
     isLiked = interactions.some((i) => i.type === "like");
     isBookmarked = interactions.some((i) => i.type === "bookmark");

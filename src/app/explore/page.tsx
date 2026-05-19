@@ -42,8 +42,9 @@ async function getInitialData(searchParams: any) {
   return { posts, total, popularTags };
 }
 
-export default async function ExplorePage({ searchParams }: { searchParams: any }) {
-  const { posts, total, popularTags } = await getInitialData(searchParams);
+export default async function ExplorePage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
+  const { posts, total, popularTags } = await getInitialData(resolvedSearchParams);
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
