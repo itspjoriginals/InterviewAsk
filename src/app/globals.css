@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 220 15% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 10%;
+    --primary: 158 64% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 15% 30%;
+    --muted: 220 14% 95%;
+    --muted-foreground: 220 8% 50%;
+    --accent: 158 64% 92%;
+    --accent-foreground: 158 64% 25%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 158 64% 40%;
+    --radius: 0.625rem;
+    --font-geist-sans: 'DM Sans', sans-serif;
+    --font-geist-mono: 'DM Mono', monospace;
+    --font-syne: 'Syne', sans-serif;
+  }
+
+  .dark {
+    --background: 220 20% 7%;
+    --foreground: 220 10% 94%;
+    --card: 220 18% 10%;
+    --card-foreground: 220 10% 94%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 220 10% 94%;
+    --primary: 158 56% 46%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 16% 14%;
+    --secondary-foreground: 220 10% 75%;
+    --muted: 220 16% 14%;
+    --muted-foreground: 220 8% 55%;
+    --accent: 158 40% 15%;
+    --accent-foreground: 158 56% 65%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 16% 16%;
+    --input: 220 16% 16%;
+    --ring: 158 56% 46%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-geist-sans);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-syne); }
+}
+
+@layer utilities {
+  .prose-ia {
+    @apply text-foreground leading-relaxed;
+  }
+  .prose-ia h1, .prose-ia h2, .prose-ia h3 {
+    @apply font-display font-bold text-foreground mt-6 mb-3;
+  }
+  .prose-ia h1 { @apply text-2xl; }
+  .prose-ia h2 { @apply text-xl; }
+  .prose-ia h3 { @apply text-lg; }
+  .prose-ia p { @apply mb-4 text-foreground/80; }
+  .prose-ia ul, .prose-ia ol { @apply mb-4 pl-6; }
+  .prose-ia li { @apply mb-1 text-foreground/80; }
+  .prose-ia ul li { @apply list-disc; }
+  .prose-ia ol li { @apply list-decimal; }
+  .prose-ia code {
+    @apply bg-muted text-primary font-mono text-sm px-1.5 py-0.5 rounded;
+  }
+  .prose-ia pre {
+    @apply bg-muted rounded-lg p-4 overflow-x-auto mb-4;
+  }
+  .prose-ia pre code { @apply bg-transparent p-0 text-foreground; }
+  .prose-ia blockquote {
+    @apply border-l-4 border-primary/40 pl-4 italic text-muted-foreground my-4;
+  }
+  .prose-ia strong { @apply font-semibold text-foreground; }
+  .prose-ia a { @apply text-primary underline underline-offset-2; }
+  .prose-ia hr { @apply my-6 border-border; }
+  .prose-ia table { @apply w-full border-collapse mb-4 text-sm; }
+  .prose-ia th { @apply border border-border bg-muted px-3 py-2 text-left font-semibold; }
+  .prose-ia td { @apply border border-border px-3 py-2; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { @apply bg-transparent; }
+::-webkit-scrollbar-thumb { @apply bg-border rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/40; }
+
+/* Selection */
+::selection { @apply bg-primary/20 text-foreground; }
