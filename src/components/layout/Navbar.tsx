@@ -5,14 +5,15 @@ import { useTheme } from "next-themes";
 import { useState } from "react";
 import { Moon, Sun, Menu, X, PenSquare, LogOut, User, LayoutDashboard, Compass } from "lucide-react";
 import { ROLE_CONFIG } from "@/lib/utils";
+import type { UserRole } from "@prisma/client";
 
 export function Navbar() {
   const { data: session } = useSession();
   const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const role = (session?.user as any)?.role;
-  const roleInfo = role ? ROLE_CONFIG[role as keyof typeof ROLE_CONFIG] : null;
+  const role = (session?.user as any)?.role as UserRole | undefined;
+  const roleInfo = role ? ROLE_CONFIG[role] : null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">

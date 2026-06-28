@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function GET(
+  req: NextRequest,
+  context: RouteContext<'/api/posts/[id]'>
+) {
+  const { id } = await context.params;
   const session = await auth();
   const post = await prisma.post.findUnique({
     where: { id },
@@ -35,8 +38,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   return NextResponse.json({ data: { ...post, isLiked, isBookmarked } });
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function DELETE(
+  req: NextRequest,
+  context: RouteContext<'/api/posts/[id]'>
+) {
+  const { id } = await context.params;
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

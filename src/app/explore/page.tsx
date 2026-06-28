@@ -5,11 +5,11 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Explore" };
 
-async function getInitialData(searchParams: any) {
-  const type = searchParams.type;
-  const q = searchParams.q || "";
-  const tag = searchParams.tag || "";
-  const sort = searchParams.sort || "newest";
+async function getInitialData(searchParams: Record<string, string | string[] | undefined>) {
+  const type = searchParams.type as string | undefined;
+  const q = (searchParams.q as string) || "";
+  const tag = (searchParams.tag as string) || "";
+  const sort = (searchParams.sort as string) || "newest";
 
   const where: any = { published: true };
   if (q) where.OR = [
@@ -42,7 +42,7 @@ async function getInitialData(searchParams: any) {
   return { posts, total, popularTags };
 }
 
-export default async function ExplorePage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function ExplorePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const resolvedSearchParams = await searchParams;
   const { posts, total, popularTags } = await getInitialData(resolvedSearchParams);
   return (

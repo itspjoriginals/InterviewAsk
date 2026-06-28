@@ -3,6 +3,20 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { Navbar } from "@/components/layout/Navbar";
 import { ProfileView } from "@/components/profile/ProfileView";
+import type { PostWithAuthor } from "@/types";
+
+type UserWithPosts = {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  bio: string | null;
+  points: number;
+  role: string;
+  createdAt: Date;
+  posts: PostWithAuthor[];
+  _count: { posts: number; comments: number };
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -34,7 +48,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <ProfileView user={user as any} isOwner={session?.user?.id === user.id} />
+      <ProfileView user={user as UserWithPosts} isOwner={session?.user?.id === user.id} />
     </div>
   );
 }

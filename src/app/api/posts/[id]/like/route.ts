@@ -3,8 +3,11 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { POINTS_CONFIG } from "@/lib/utils";
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function POST(
+  req: NextRequest,
+  context: RouteContext<'/api/posts/[id]/like'>
+) {
+  const { id } = await context.params;
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

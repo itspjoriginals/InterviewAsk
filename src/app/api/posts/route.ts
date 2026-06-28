@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { PostType } from "@prisma/client";
+import { PostType, UserRole } from "@prisma/client";
 import { POINTS_CONFIG } from "@/lib/utils";
 
 const createSchema = z.object({
@@ -120,9 +120,9 @@ export async function POST(req: NextRequest) {
 }
 
 async function updateUserRole(userId: string, points: number) {
-  let role = "BEGINNER";
+  let role: UserRole = "BEGINNER";
   if (points >= 400) role = "MENTOR";
   else if (points >= 200) role = "ADVANCED";
   else if (points >= 50) role = "CONTRIBUTOR";
-  await prisma.user.update({ where: { id: userId }, data: { role: role as any } });
+  await prisma.user.update({ where: { id: userId }, data: { role } });
 }

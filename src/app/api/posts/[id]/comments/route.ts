@@ -6,8 +6,11 @@ import { POINTS_CONFIG } from "@/lib/utils";
 
 const schema = z.object({ content: z.string().min(2).max(2000) });
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function POST(
+  req: NextRequest,
+  context: RouteContext<'/api/posts/[id]/comments'>
+) {
+  const { id } = await context.params;
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

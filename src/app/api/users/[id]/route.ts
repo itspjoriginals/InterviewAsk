@@ -3,8 +3,11 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function GET(
+  req: NextRequest,
+  context: RouteContext<'/api/users/[id]'>
+) {
+  const { id } = await context.params;
   const user = await prisma.user.findUnique({
     where: { id },
     select: {
@@ -23,8 +26,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   return NextResponse.json({ data: user });
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function PATCH(
+  req: NextRequest,
+  context: RouteContext<'/api/users/[id]'>
+) {
+  const { id } = await context.params;
   const session = await auth();
   if (!session?.user?.id || session.user.id !== id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
