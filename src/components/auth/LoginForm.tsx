@@ -104,9 +104,9 @@ export function LoginForm() {
       </p>
 
       {/* Demo hint */}
-      <div className="mt-4 p-3 rounded-lg bg-muted text-xs text-muted-foreground text-center">
+      {/* <div className="mt-4 p-3 rounded-lg bg-muted text-xs text-muted-foreground text-center">
         Demo: <strong>alice@example.com</strong> / <strong>password123</strong>
-      </div>
+      </div> */}
     </div>
   );
 }
